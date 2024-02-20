@@ -84,3 +84,53 @@ public:
      return solve(heights,0,bricks,ladders);    
     }
 };
+
+
+/*
+
+MOST OPTIMISED AND ACCEPTED SOLUTION
+*/
+
+class Solution {
+public:
+    int furthestBuilding(vector<int>& heights, int bricks, int ladders) {
+     int n=heights.size();
+
+     priority_queue<int>pq;
+     int i=0;
+     for(;i<n-1;i++){
+         if(heights[i+1]<heights[i])continue;
+
+         int diff=heights[i+1]-heights[i];
+
+         if(bricks>=diff){ //agar brick hai to use kar lo ....aage apni galti sudhar sakte ho
+           bricks-=diff;
+           pq.push(diff);
+         }
+
+         else if(ladders>0){
+             if(!pq.empty()){
+                 int max_brick_past=pq.top();
+                 if(max_brick_past>diff){
+                     pq.pop();
+                     bricks+=max_brick_past;
+                     bricks-=diff;
+                     pq.push(diff);
+                     ladders--;
+                 }
+                 else{
+                     ladders--;
+                 }
+             }
+
+             else{
+                 ladders--;
+             }
+         }
+         else{
+             break;
+         }
+     }
+       return i;
+    }
+};
